@@ -1,10 +1,11 @@
 const basePath = process.cwd();
 const { NETWORK } = require(`${basePath}/constants/network.js`);
 const fs = require("fs");
+const path = require("path");
 const sha1 = require(`${basePath}/node_modules/sha1`);
 const { createCanvas, loadImage } = require(`${basePath}/node_modules/canvas`);
 const buildDir = `${basePath}/build`;
-const layersDir = `${basePath}/layers`;
+const layersDir = '/home/hero/Sporos Dropbox/IT Lackey/Georges arts NFTs/Sporos/Assets/Collection0/Layers'; // `${basePath}/layers`;
 const {
   format,
   baseUri,
