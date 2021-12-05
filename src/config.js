@@ -11,7 +11,7 @@ const baseUri = "ipfs://NewUriToReplace";
 
 const solanaMetadata = {
   symbol: "YC",
-  seller_fee_basis_points: 1000, // Define how much % you want from secondary market sales 1000 = 10%
+  seller_fee_basis_points: 100, // Define how much % you want from secondary market sales 1000 = 10%
   external_url: "https://www.youtube.com/c/hashlipsnft",
   creators: [
     {
@@ -78,7 +78,13 @@ const background = {
   default: "#000000",
 };
 
-const extraMetadata = {};
+const extraMetadata = {
+  compiler: "Daemon",
+  release: "DCS1R1",
+  artist: "Scott Georges",
+  thumbnail_uri: `${baseUri}/small/[id].png`,
+  fullresulotion_uri: `${baseUri}/hires/[id].png`
+};
 
 const rarityDelimiter = "#";
 
