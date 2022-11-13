@@ -1,3 +1,4 @@
+const { createConfig } = require("./configBuilder");
 const basePath = process.cwd();
 const { MODE } = require(`${basePath}/constants/blend_mode.js`);
 const { NETWORK } = require(`${basePath}/constants/network.js`);
@@ -21,11 +22,14 @@ const solanaMetadata = {
   ],
 };
 
-const { rabbits } = require("./config.rabbits");
-const { monkeys } = require("./config.monkeys");
-const { cats } = require("./config.cats");
-// If you have selected Solana then the collection starts from 0 automatically
-const layerConfigurations = [...cats];
+const cats = createConfig("Cats", 1, 1, true);
+const monkeys = createConfig("Monkeys", 300, 5, true);
+const rabbits = createConfig("Rabbits", 300, 5, false);
+
+
+const layerConfigurations = [...cats, ...monkeys, ...rabbits];
+
+//console.log("CONF", JSON.stringify(layerConfigurations));
 
 const shuffleLayerConfigurations = true;
 
@@ -69,7 +73,7 @@ const background = {
 
 const extraMetadata = {
   compiler: "Daemon",
-  release: "DCS1R1",
+  release: "DCS2R1",
   artist: "Scott Georges",
   thumbnail_uri: `${baseUri}/small/[id].png`,
   fullresulotion_uri: `${baseUri}/hires/[id].png`,
