@@ -22,12 +22,12 @@ const solanaMetadata = {
   ],
 };
 
-const cats = createConfig("Cats", 1, 1, true);
+const cats = createConfig("Cats", 5, 1, true);
 const monkeys = createConfig("Monkeys", 300, 5, true);
 const rabbits = createConfig("Rabbits", 300, 5, false);
 
 
-const layerConfigurations = [...cats, ...monkeys, ...rabbits];
+const layerConfigurations = [...cats]; //, ...monkeys, ...rabbits];
 
 //console.log("CONF", JSON.stringify(layerConfigurations));
 
@@ -79,7 +79,7 @@ const extraMetadata = {
   fullresulotion_uri: `${baseUri}/hires/[id].png`,
 };
 
-const rarityDelimiter = "_";
+const rarityDelimiter = "#";
 
 const uniqueDnaTorrance = 10000;
 

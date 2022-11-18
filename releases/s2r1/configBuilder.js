@@ -3,7 +3,7 @@ const backgroundLayer = {
   options: {
     displayName: "District",
     bypassDNA: true,
-    opacity: 0.55,
+    opacity: 0.35,
   },
 };
 
