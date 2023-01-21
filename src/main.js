@@ -5,8 +5,8 @@ const fs = require("fs");
 const path = require("path");
 const sha1 = require(`${basePath}/node_modules/sha1`);
 const { createCanvas, loadImage } = require(`${basePath}/node_modules/canvas`);
-const buildDir = `${basePath}/build`;
-const layersDir = `${basePath}/layers`;
+const buildDir = `${assetPath}/build`;
+const layersDir = `${assetPath}/layers`;
 const {
   format,
   baseUri,
