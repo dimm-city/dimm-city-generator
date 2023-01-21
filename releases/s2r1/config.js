@@ -22,14 +22,14 @@ const solanaMetadata = {
   ],
 };
 
-const cats = createConfig("Cats", 5, 1, true);
+const cats = createConfig("Cats", 15, 1, true);
 const monkeys = createConfig("Monkeys", 300, 5, true);
 const rabbits = createConfig("Rabbits", 300, 5, false);
 
 
 const layerConfigurations = [...cats]; //, ...monkeys, ...rabbits];
 
-//console.log("CONF", JSON.stringify(layerConfigurations));
+console.log("CONF", JSON.stringify(layerConfigurations));
 
 const shuffleLayerConfigurations = true;
 

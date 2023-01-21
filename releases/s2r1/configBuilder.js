@@ -34,7 +34,7 @@ const groupTemplateLayers = [
   },
 ];
 const layerConfig = {
-  growEditionSizeTo: 4,
+  growEditionSizeTo: 5,
   layersOrder: [
     {
       name: "Embellishments",
@@ -43,15 +43,15 @@ const layerConfig = {
       },
     },
     {
-      name: "Headgear",
-      options: {
-        displayName: "Headgear",
-      },
-    },
-    {
       name: "Armor",
       options: {
         displayName: "Armor",
+      },
+    },
+    {
+      name: "Headgear",
+      options: {
+        displayName: "Headgear",
       },
     },
     {
@@ -92,6 +92,7 @@ function createConfig(race, editionSize, numberOfGroups, includeTail) {
 
     output.push(groupLayerConfig);
   }
+  
   return output;
 }
 module.exports = { createConfig };
