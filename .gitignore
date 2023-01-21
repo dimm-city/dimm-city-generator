@@ -1,3 +1,5 @@
+releases/**/*[.png, .jpg]
+
 # Logs
 
 logs
