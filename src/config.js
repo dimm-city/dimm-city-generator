@@ -5,13 +5,13 @@ const { NETWORK } = require(`${basePath}/constants/network.js`);
 const network = NETWORK.eth;
 
 // General metadata for Ethereum
-const namePrefix = "Rabbit";
-const description = "Sporo Rabbits - Series 1";
-const baseUri = "https://dimmcitystorage.blob.core.windows.net/sporos/s1r1";
+const namePrefix = "Your Collection";
+const description = "Remember to replace this description";
+const baseUri = "ipfs://NewUriToReplace";
 
 const solanaMetadata = {
   symbol: "YC",
-  seller_fee_basis_points: 100, // Define how much % you want from secondary market sales 1000 = 10%
+  seller_fee_basis_points: 1000, // Define how much % you want from secondary market sales 1000 = 10%
   external_url: "https://www.youtube.com/c/hashlipsnft",
   creators: [
     {
@@ -24,89 +24,15 @@ const solanaMetadata = {
 // If you have selected Solana then the collection starts from 0 automatically
 const layerConfigurations = [
   {
-    growEditionSizeTo: 3000,
+    growEditionSizeTo: 5,
     layersOrder: [
-      {
-        name: "13_Background",
-        options: {
-          displayName: "Background",
-          bypassDNA: true,
-          opacity: 0.55,       
-        },
-      },
-      {
-        name: "12_Behind",
-        options: {
-          displayName: "Behind",
-        },
-      },
-      {
-        name: "11_BodyColors",
-        options: {
-          displayName: "Body",
-        },
-      },
-      {
-        name: "10_Outline",
-        options: {
-          displayName: "Outline",
-          bypassDNA: true
-        },
-      },
-      {
-        name: "9_BodySkins",
-        options: {
-          displayName: "Skin",
-        },
-      },
-      {
-        name: "8_Clothing",
-        options: {
-          displayName: "Clothing",
-        },
-      },
-      {
-        name: "7_Weapon",
-        options: {
-          displayName: "Weapon",
-        },
-      },
-      {
-        name: "6_Adornment",
-        options: {
-          displayName: "Adornment",
-        },
-      },
-      {
-        name: "5_Mouth",
-        options: {
-          displayName: "Mouth",
-        },
-      },
-      {
-        name: "4_Eyes",
-        options: {
-          displayName: "Eyes",
-        },
-      },
-      {
-        name: "3_MasksHelmetsFace",
-        options: {
-          displayName: "Mask",
-        },
-      },
-      {
-        name: "2_MouthAccessory",
-        options: {
-          displayName: "Mouth Accessory",
-        },
-      },
-      {
-        name: "1_AboveHead",
-        options: {
-          displayName: "Above Head",
-        },
-      },
+      { name: "Background" },
+      { name: "Eyeball" },
+      { name: "Eye color" },
+      { name: "Iris" },
+      { name: "Shine" },
+      { name: "Bottom lid" },
+      { name: "Top lid" },
     ],
   },
 ];
@@ -116,8 +42,9 @@ const shuffleLayerConfigurations = false;
 const debugLogs = false;
 
 const format = {
-  width: 3000,
-  height: 4000,
+  width: 512,
+  height: 512,
+  smoothing: false,
 };
 
 const gif = {
@@ -141,25 +68,19 @@ const text = {
 };
 
 const pixelFormat = {
-  ratio: 5 / 128,
+  ratio: 2 / 128,
 };
 
 const background = {
-  generate: false,
+  generate: true,
   brightness: "80%",
   static: false,
   default: "#000000",
 };
 
-const extraMetadata = {
-  compiler: "Daemon",
-  release: "DCS1R1",
-  artist: "Scott Georges",
-  thumbnail_uri: `${baseUri}/small/[id].png`,
-  fullresulotion_uri: `${baseUri}/hires/[id].png`
-};
+const extraMetadata = {};
 
-const rarityDelimiter = "_";
+const rarityDelimiter = "#";
 
 const uniqueDnaTorrance = 10000;
 
