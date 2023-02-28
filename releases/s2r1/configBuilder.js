@@ -49,15 +49,15 @@ const layerConfig = {
       },
     },
     {
-      name: "Headgear",
-      options: {
-        displayName: "Headgear",
-      },
-    },
-    {
       name: "Equipment",
       options: {
         displayName: "Equipment",
+      },
+    },
+    {
+      name: "Headgear",
+      options: {
+        displayName: "Headgear",
       },
     },
   ],
@@ -71,9 +71,11 @@ const botLayer = {
 };
 function createConfig(race, editionSize, numberOfGroups, includeTail) {
   const output = [];
+  const tokensPerGroup = editionSize / (numberOfGroups ?? 1);
+
   for (let index = 1; index <= numberOfGroups; index++) {
     let groupLayerConfig = JSON.parse(JSON.stringify(layerConfig));
-    groupLayerConfig.growEditionSizeTo = editionSize;
+    groupLayerConfig.growEditionSizeTo = tokensPerGroup * index;
     groupLayerConfig.layersOrder = [
       backgroundLayer,
       ...groupTemplateLayers

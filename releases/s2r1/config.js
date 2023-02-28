@@ -22,7 +22,7 @@ const solanaMetadata = {
   ],
 };
 
-const cats = createConfig("Cats", 15, 1, true);
+const cats = createConfig("Cats", 300, 2, true);
 const monkeys = createConfig("Monkeys", 300, 5, true);
 const rabbits = createConfig("Rabbits", 300, 5, false);
 
