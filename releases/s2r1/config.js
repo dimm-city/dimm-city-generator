@@ -22,14 +22,49 @@ const solanaMetadata = {
   ],
 };
 
-const cats = createConfig("Cats", 300, 2, true);
+
+// //NOTE: could refactor config builder to take this as an arg instead of group number
+// let catGroups = {
+//   directories: ["Red", "Brown", "Grey"],
+//   layers: [
+//     {
+//       name: "Tails",
+//       sharedPath: "Cats/Tails",
+//       options: {
+//         displayName: "Tail",
+//       },
+//     },
+//     {
+//       name: "Left_Arm",
+//       sharedPath: "Cats/Left_Arm",
+//       options: {
+//         displayName: "Weapon 1",
+//       },
+//     },
+//     {
+//       name: "Right_Arm",
+//       sharedPath: "Cats/Right_Arm",
+//       options: {
+//         displayName: "Weapon 2",
+//       },
+//     },
+//     {
+//       name: "Body",
+//       options: {
+//         displayName: "Body",
+//       },
+//     },
+//   ],
+// };
+
+
+const cats = createConfig("Cats", 300, 5, true);
 const monkeys = createConfig("Monkeys", 300, 5, true);
 const rabbits = createConfig("Rabbits", 300, 5, false);
 
-
 const layerConfigurations = [...cats]; //, ...monkeys, ...rabbits];
 
-console.log("CONF", JSON.stringify(layerConfigurations));
+//console.log("CONF", JSON.stringify(layerConfigurations));
 
 const shuffleLayerConfigurations = true;
 
@@ -74,9 +109,7 @@ const background = {
 const extraMetadata = {
   compiler: "Daemon",
   release: "DCS2R1",
-  artist: "Scott Georges",
-  thumbnail_uri: `${baseUri}/small/[id].png`,
-  fullresulotion_uri: `${baseUri}/hires/[id].png`,
+  artist: "Scott Georges"
 };
 
 const rarityDelimiter = "#";

@@ -1,5 +1,8 @@
 const basePath = process.cwd();
-const assetPath = process.argv.length === 3 ? process.cwd() + '/' + process.argv[2] : process.cwd() + '/src/';
+const assetPath =
+  process.argv.length === 3
+    ? process.cwd() + "/" + process.argv[2]
+    : process.cwd() + "/src/";
 const { NETWORK } = require(`${basePath}/constants/network.js`);
 const fs = require("fs");
 const path = require("path");
@@ -91,10 +94,61 @@ const getElements = (path) => {
     });
 };
 
+const getElementsWithSharedFolder = (layersDir, layerConfig) => {
+  let elements = [];
+
+  if (fs.existsSync(`${layersDir}/${layerConfig.name}/`)) {
+    elements = fs
+      .readdirSync(`${layersDir}/${layerConfig.name}/`)
+      .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
+      .map((i, index) => {
+        if (i.includes("-")) {
+          throw new Error(
+            `layer name can not contain dashes, please fix: ${i}`
+          );
+        }
+        return {
+          id: index,
+          name: cleanName(i),
+          filename: i,
+          path: `${layersDir}/${layerConfig.name}/${i}`,
+          weight: getRarityWeight(i),
+        };
+      });
+  }
+
+  if (
+    layerConfig.sharedPath &&
+    fs.existsSync(`${layersDir}/${layerConfig.sharedPath}/`)
+  ) {
+    elements = [
+      ...elements,
+      ...fs
+        .readdirSync(`${layersDir}/${layerConfig.sharedPath}/`)
+        .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
+        .map((i, index) => {
+          if (i.includes("-")) {
+            throw new Error(
+              `layer name can not contain dashes, please fix: ${i}`
+            );
+          }
+          return {
+            id: index,
+            name: cleanName(i),
+            filename: i,
+            path: `${layersDir}/${layerConfig.sharedPath}/${i}`,
+            weight: getRarityWeight(i),
+          };
+        }),
+    ];
+  }
+  return elements;
+};
+
 const layersSetup = (layersOrder) => {
   const layers = layersOrder.map((layerObj, index) => ({
     id: index,
-    elements: getElements(`${layersDir}/${layerObj.name}/`),
+    elements: getElementsWithSharedFolder(layersDir, layerObj),
     name:
       layerObj.options?.["displayName"] != undefined
         ? layerObj.options?.["displayName"]
@@ -306,7 +360,7 @@ const createDna = (_layers) => {
     //   return b.weight - a.weight;
     // });
     layer.elements = layer.elements.sort((a, b) => {
-        return 0.5 - Math.random();
+      return 0.5 - Math.random();
     });
     for (var i = 0; i < layer.elements.length; i++) {
       // subtract the current weight from the random weight until we reach a sub zero value.

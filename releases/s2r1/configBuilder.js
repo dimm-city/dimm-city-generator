@@ -83,6 +83,7 @@ function createConfig(race, editionSize, numberOfGroups, includeTail) {
         .map((l) => {
           let item = JSON.parse(JSON.stringify(l));
           item.name = `${race}/Colors/Group${index}/${l.name}`;
+          item.sharedPath = `${race}/${l.name}`;
           return item;
         }),
       ...groupLayerConfig.layersOrder.map((l) => {
