@@ -187,7 +187,11 @@ npm run build
 or
 
 ```sh
-node index.js
+node src/cli.js generate <path/to/assets>
+```
+or
+```
+dcg generate <path/to/assets>
 ```
 
 The program will output all the images in the `build/images` directory along with the metadata files in the `build/json` directory. Each collection will have a `_metadata.json` file that consists of all the metadata in the collection inside the `build/json` directory. The `build/json` folder also will contain all the single json files that represent each image file. The single json file of a image will look something like this:

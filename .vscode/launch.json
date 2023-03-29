@@ -11,8 +11,11 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/index.js",
-            "args": ["/releases/s2r1/"]
+            "program": "${workspaceFolder}/src/cli.js",
+            "args": [
+                "generate",
+                "/releases/s2r1/"
+            ]
         }
     ]
 }

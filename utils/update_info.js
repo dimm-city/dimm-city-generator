@@ -1,4 +1,5 @@
-const basePath = process.cwd();
+const { basePath, getConfigPath, getBuildDir } = require("../src/paths");
+
 const { NETWORK } = require(`${basePath}/constants/network.js`);
 const fs = require("fs");
 
@@ -8,10 +9,10 @@ const {
   namePrefix,
   network,
   solanaMetadata,
-} = require(`${basePath}/src/config.js`);
+} = require(getConfigPath());
 
 // read json data
-let rawdata = fs.readFileSync(`${basePath}/build/json/_metadata.json`);
+let rawdata = fs.readFileSync(`${getBuildDir()}/json/_metadata.json`);
 let data = JSON.parse(rawdata);
 
 data.forEach((item) => {
@@ -25,13 +26,13 @@ data.forEach((item) => {
     item.image = `${baseUri}/${item.edition}.png`;
   }
   fs.writeFileSync(
-    `${basePath}/build/json/${item.edition}.json`,
+    `${getBuildDir()}/json/${item.edition}.json`,
     JSON.stringify(item, null, 2)
   );
 });
 
 fs.writeFileSync(
-  `${basePath}/build/json/_metadata.json`,
+  `${getBuildDir()}/json/_metadata.json`,
   JSON.stringify(data, null, 2)
 );
 

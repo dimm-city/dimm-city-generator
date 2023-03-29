@@ -32,6 +32,12 @@ const groupTemplateLayers = [
       displayName: "Body",
     },
   },
+  {
+    name: "Eyes",
+    options: {
+      displayName: "Eyes",
+    },
+  },
 ];
 const layerConfig = {
   growEditionSizeTo: 5,
@@ -46,44 +52,54 @@ const layerConfig = {
       name: "Armor",
       options: {
         displayName: "Armor",
+        bypassDNA: true,
       },
     },
     {
       name: "Equipment",
       options: {
         displayName: "Equipment",
+        bypassDNA: true,
       },
     },
     {
       name: "Headgear",
       options: {
         displayName: "Headgear",
+        bypassDNA: true,
       },
     },
   ],
 };
 
 const botLayer = {
-    name: "Bots",
-    options: {
-        displayName: "Bot",
-    },
+  name: "Bots",
+  options: {
+    displayName: "Bot",
+    bypassDNA: true,
+  },
 };
-function createConfig(race, editionSize, numberOfGroups, includeTail) {
+function createConfig(race, editionSize, groups, includeTail) {
   const output = [];
-  const tokensPerGroup = editionSize / (numberOfGroups ?? 1);
+  const tokensPerGroup = editionSize / (groups.length ?? 1);
 
-  for (let index = 1; index <= numberOfGroups; index++) {
+  for (let index = 1; index <= groups.length; index++) {
     let groupLayerConfig = JSON.parse(JSON.stringify(layerConfig));
-    groupLayerConfig.growEditionSizeTo = tokensPerGroup * index;
+    groupLayerConfig.growEditionSizeTo =
+      Math.round(tokensPerGroup * index) +
+      (Number.isSafeInteger(tokensPerGroup) ? 0 : 1);
+
+    if (groupLayerConfig.growEditionSizeTo > editionSize)
+      groupLayerConfig.growEditionSizeTo = editionSize;
+
     groupLayerConfig.layersOrder = [
       backgroundLayer,
       ...groupTemplateLayers
         .filter((l) => (includeTail ? true : l.name.includes("Tail") == false))
         .map((l) => {
           let item = JSON.parse(JSON.stringify(l));
-          item.name = `${race}/Colors/Group${index}/${l.name}`;
-          item.sharedPath = `${race}/${l.name}`;
+          item.name = `${race}/Colors/${groups[index]}/${l.name}`;
+          item.sharedPaths = [`${race}/${l.name}`, l.name];
           return item;
         }),
       ...groupLayerConfig.layersOrder.map((l) => {
@@ -95,7 +111,7 @@ function createConfig(race, editionSize, numberOfGroups, includeTail) {
 
     output.push(groupLayerConfig);
   }
-  
+
   return output;
 }
 module.exports = { createConfig };

@@ -23,42 +23,24 @@ const solanaMetadata = {
 };
 
 
-// //NOTE: could refactor config builder to take this as an arg instead of group number
-// let catGroups = {
-//   directories: ["Red", "Brown", "Grey"],
-//   layers: [
-//     {
-//       name: "Tails",
-//       sharedPath: "Cats/Tails",
-//       options: {
-//         displayName: "Tail",
-//       },
-//     },
-//     {
-//       name: "Left_Arm",
-//       sharedPath: "Cats/Left_Arm",
-//       options: {
-//         displayName: "Weapon 1",
-//       },
-//     },
-//     {
-//       name: "Right_Arm",
-//       sharedPath: "Cats/Right_Arm",
-//       options: {
-//         displayName: "Weapon 2",
-//       },
-//     },
-//     {
-//       name: "Body",
-//       options: {
-//         displayName: "Body",
-//       },
-//     },
-//   ],
-// };
-
-
-const cats = createConfig("Cats", 300, 5, true);
+const cats = createConfig(
+  "Cats",
+  300,
+  [
+    "Brown",
+    "Burgundy",
+    "Cobalt",
+    "Dark Grey",
+    "Green",
+    "Light Grey",
+    "Light Purple",
+    "Navy",
+    "Purple",
+    "Tan",
+    "Teal",
+  ],
+  true
+);
 const monkeys = createConfig("Monkeys", 300, 5, true);
 const rabbits = createConfig("Rabbits", 300, 5, false);
 
@@ -109,7 +91,7 @@ const background = {
 const extraMetadata = {
   compiler: "Daemon",
   release: "DCS2R1",
-  artist: "Scott Georges"
+  artist: "Scott Georges",
 };
 
 const rarityDelimiter = "#";
@@ -117,7 +99,7 @@ const rarityDelimiter = "#";
 const uniqueDnaTorrance = 10000;
 
 const preview = {
-  thumbPerRow: 5,
+  thumbPerRow: parseInt(format.width / 50),
   thumbWidth: 50,
   imageRatio: format.height / format.width,
   imageName: "preview.png",

@@ -1,9 +1,8 @@
-const basePath = process.cwd();
+const { basePath,  getBuildDir, getConfigPath } = require("../src/paths");
 const fs = require("fs");
 const { createCanvas, loadImage } = require("canvas");
-const buildDir = `${basePath}/build`;
-const imageDir = `${buildDir}/images`;
-const { format, preview_gif } = require(`${basePath}/src/config.js`);
+const imageDir = `${getBuildDir()}/images`;
+const { format, preview_gif } = require(getConfigPath());
 const canvas = createCanvas(format.width, format.height);
 const ctx = canvas.getContext("2d");
 
@@ -42,7 +41,7 @@ const saveProjectPreviewGIF = async (_data) => {
     console.log(
       `Preparing a ${previewCanvasWidth}x${previewCanvasHeight} project preview with ${_data.length} images.`
     );
-    const previewPath = `${buildDir}/${imageName}`;
+    const previewPath = `${getBuildDir()}/${imageName}`;
 
     ctx.clearRect(0, 0, width, height);
 

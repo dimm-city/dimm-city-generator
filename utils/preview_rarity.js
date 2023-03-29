@@ -1,13 +1,15 @@
 const fs = require("fs");
 const { basename, extname } = require("path");
-const rarityDelimiter = "#";
+
+const { getConfigPath,  getAssetPath } = require("../src/paths");
+const { rarityDelimiter } = require(getConfigPath());
+
 const editionCount = 100;
 
-let dirPath = process.argv[2];
-if (fs.existsSync(dirPath)) {
-  files = fs.readdirSync(process.argv[2]);
+if (fs.existsSync(getAssetPath())) {
+  files = fs.readdirSync(getAssetPath());
 } else {
-  console.error("Directory not found", dirPath);
+  console.error("Directory not found", getAssetPath());
   return 1;
 }
 let totalWeight = 0;
@@ -19,7 +21,7 @@ for (let index = 0; index < files.length; index++) {
     let filename = basename(file);
     let parts = filename.split(rarityDelimiter);
     let weight = 0;
-    if (filename.indexOf(rarityDelimiter)> -1)
+    if (filename.indexOf(rarityDelimiter) > -1)
       weight = parts[1].replace(extname(filename), "") * 1;
     else weight = 1;
 

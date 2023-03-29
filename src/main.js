@@ -1,16 +1,15 @@
-const basePath = process.cwd();
-const assetPath =
-  process.argv.length === 3
-    ? process.cwd() + "/" + process.argv[2]
-    : process.cwd() + "/src/";
-const { NETWORK } = require(`${basePath}/constants/network.js`);
+const paths = require("./paths");
+
+const  buildDir = paths.getBuildDir();
+const layersDir = paths.getLayersDir();
+
+const { NETWORK } = require(`${paths.basePath}/constants/network.js`);
 const fs = require("fs");
 const path = require("path");
-const sha1 = require(`${basePath}/node_modules/sha1`);
-const { createCanvas, loadImage } = require(`${basePath}/node_modules/canvas`);
-const buildDir = `${assetPath}/build`;
-const layersDir = `${assetPath}/layers`;
-const {
+const sha1 = require(`${paths.basePath}/node_modules/sha1`);
+const { createCanvas, loadImage } = require(`${paths.basePath}/node_modules/canvas`);
+
+let {
   format,
   baseUri,
   description,
@@ -26,7 +25,8 @@ const {
   network,
   solanaMetadata,
   gif,
-} = require(`${assetPath}/config.js`);
+} = require(paths.getConfigPath());
+
 const canvas = createCanvas(format.width, format.height);
 const ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = format.smoothing;
@@ -35,13 +35,14 @@ var attributesList = [];
 var dnaList = new Set();
 const DNA_DELIMITER = "|";
 const HashlipsGiffer = require(path.join(
-  basePath,
+  paths.basePath,
   "/modules/HashlipsGiffer.js"
 ));
 
 let hashlipsGiffer = null;
 
 const buildSetup = () => {
+  console.log('b', buildDir, paths.getAssetPath());
   if (fs.existsSync(buildDir)) {
     fs.rmdirSync(buildDir, { recursive: true });
   }
@@ -117,30 +118,36 @@ const getElementsWithSharedFolder = (layersDir, layerConfig) => {
       });
   }
 
-  if (
-    layerConfig.sharedPath &&
-    fs.existsSync(`${layersDir}/${layerConfig.sharedPath}/`)
-  ) {
-    elements = [
-      ...elements,
-      ...fs
-        .readdirSync(`${layersDir}/${layerConfig.sharedPath}/`)
-        .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
-        .map((i, index) => {
-          if (i.includes("-")) {
-            throw new Error(
-              `layer name can not contain dashes, please fix: ${i}`
-            );
-          }
-          return {
-            id: index,
-            name: cleanName(i),
-            filename: i,
-            path: `${layersDir}/${layerConfig.sharedPath}/${i}`,
-            weight: getRarityWeight(i),
-          };
-        }),
-    ];
+  if (Array.isArray(layerConfig.sharedPaths)) {
+    for (const sharedPath of layerConfig.sharedPaths) {
+      if (fs.existsSync(`${layersDir}/${sharedPath}/`)) {
+        elements = [
+          ...elements,
+          ...fs
+            .readdirSync(`${layersDir}/${sharedPath}/`)
+            .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
+            .map((i, index) => {
+              if (i.includes("-")) {
+                throw new Error(
+                  `layer name can not contain dashes, please fix: ${i}`
+                );
+              }
+              return {
+                id: index,
+                name: cleanName(i),
+                filename: i,
+                path: `${layersDir}/${sharedPath}/${i}`,
+                weight: getRarityWeight(i),
+              };
+            }),
+        ];
+      }
+    }
+  }
+
+  if (elements?.length < 1) {
+    console.log(`No images found for ${layerConfig.name}`);
+    throw new Error(`No images found for` + layerConfig.name);
   }
   return elements;
 };
@@ -149,6 +156,7 @@ const layersSetup = (layersOrder) => {
   const layers = layersOrder.map((layerObj, index) => ({
     id: index,
     elements: getElementsWithSharedFolder(layersDir, layerObj),
+    dirs: layerObj.sharedPaths,
     name:
       layerObj.options?.["displayName"] != undefined
         ? layerObj.options?.["displayName"]
@@ -198,7 +206,7 @@ const addMetadata = (_dna, _edition) => {
     date: dateTime,
     ...extraMetadata,
     attributes: attributesList,
-    compiler: "HashLips Art Engine",
+    compiler: "Daemon",
   };
   if (network == NETWORK.sol) {
     tempMetadata = {
@@ -278,10 +286,30 @@ const drawElement = (_renderObject, _index, _layersLen) => {
   addAttributes(_renderObject);
 };
 
-const constructLayerToDna = (_dna = "", _layers = []) => {
-  let mappedDnaToLayers = _layers.map((layer, index) => {
-    let selectedElement = layer.elements.find(
-      (e) => e.id == cleanDna(_dna.split(DNA_DELIMITER)[index])
+const constructLayerToDna = (dna = "", layers = []) => {
+  if (!dna || !dna.includes(DNA_DELIMITER)) {
+    throw new Error(`Invalid DNA: ${dna}`);
+  }
+
+  const dnaSegments = dna.split(DNA_DELIMITER);
+
+  if (
+    dnaSegments.some((d) => d == null) ||
+    layers.length != dnaSegments.length
+  ) {
+    console.log(JSON.stringify(layers.filter((l) => l.elements?.length < 1)));
+    throw new Error(`Empty or missing DNA segment in ${dna}`);
+  }
+
+  const mappedDnaToLayers = layers.map((layer, index) => {
+    const segment = dnaSegments[index];
+    if (!segment) {
+      throw new Error(
+        `Invalid DNA for layer ${layer.name} at index ${index}: ${dna}`
+      );
+    }
+    const selectedElement = layer.elements.find(
+      (e) => e.id == cleanDna(segment)
     );
     return {
       name: layer.name,
@@ -290,6 +318,7 @@ const constructLayerToDna = (_dna = "", _layers = []) => {
       selectedElement: selectedElement,
     };
   });
+
   return mappedDnaToLayers;
 };
 
@@ -372,6 +401,15 @@ const createDna = (_layers) => {
           }`
         );
       }
+
+      if (i == layer.elements.length - 1) {
+        console.error(`Failed to create DNA for this layer: ${layer.name}`);
+        return randNum.push(
+          `${layer.elements[i].id}:${layer.elements[i].filename}${
+            layer.bypassDNA ? "?bypassDNA=true" : ""
+          }`
+        );
+      }
     }
   });
   return randNum.join(DNA_DELIMITER);
@@ -393,6 +431,8 @@ const saveMetaDataSingleFile = (_editionCount) => {
     JSON.stringify(metadata, null, 2)
   );
 };
+
+
 
 function shuffle(array) {
   let currentIndex = array.length,
